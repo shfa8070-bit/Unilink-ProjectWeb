@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>UniLink - نموذج مشاركة مصادر</title>
+</head>
+<body>
+
+    <header>
+        <div>
+            <a href="add-share-info.html">&lt; العودة</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="add-group-info.html">أضف قروب</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="my-groups.html">قروباتي</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul>
+        </nav>
+        <div>
+            <h1>UniLink</h1>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>شارك مجتمعك بمصادر مفيدة</h2>
+            <p>أدخل عنواناً واضحاً وأرفق الملف لمساعدة زملائك</p>
+
+            <form action="community.html" method="POST">
+                <div>
+                    <label for="share-title">عنوان المشاركة *</label>
+                    <input type="text" id="share-title" placeholder="مثال: شرح أساسيات البرمجة..." required>
+                </div>
+
+                <div>
+                    <label for="share-file">أرفق الملف *</label>
+                    <input type="file" id="share-file" required>
+                </div>
+
+                <ul>
+                    <li>تأكد من وضوح عنوان المشاركة</li>
+                    <li>اختر الملف أو المرجع الصحيح</li>
+                    <li>مشاركتك ستفيد طلاب دفعتك</li>
+                </ul>
+
+                <div>
+                    <button type="submit">أنشر المصدر</button>
+                    <a href="community.html"><button type="button">إلغاء</button></a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>

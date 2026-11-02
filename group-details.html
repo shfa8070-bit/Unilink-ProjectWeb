@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>UniLink - تفاصيل المادة</title>
+</head>
+<body>
+
+    <header>
+        <div>
+            <a href="javascript:history.back()">&lt; العودة</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="add-group-info.html">أضف قروب</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="my-groups.html">قروباتي</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul>
+        </nav>
+        <div>
+            <h1>UniLink</h1>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2 id="course-title-header">مقدمة في الحاسب | CS 1111</h2>
+            <p id="course-desc-header">قروب خاص بالمقرر لمشاركة الملخصات والمناقشات والإعلانات</p>
+
+            <ul>
+                <li>نوع القروب: مقرر دراسي</li>
+                <li>الجامعة: <span id="info-uni">جامعة الأمير سطام بن عبدالعزيز</span></li>
+                <li>عدد الأعضاء: <span id="info-members">256</span> عضو</li>
+                <li>الكلية: <span id="info-college">كلية الهندسة وعلوم الحاسب</span></li>
+                <li>تاريخ الإضافة: 8-8-2026</li>
+                <li>رمز المقرر: <span id="info-code">CS 1111</span></li>
+            </ul>
+
+            <div>
+                <a href="verify-email.html"><button type="button">تحقق من بريدك الجامعي</button></a>
+                <button type="button">مشاركة</button>
+            </div>
+
+            <div>
+                <h3>وصف مختصر</h3>
+                <p id="info-summary">يتناول هذا المقرر المفاهيم الأساسية للمادة وتغطية المواضيع الدراسية المعتمدة في الخطة الدراسية الخاصة بالجامعة.</p>
+            </div>
+        </section>
+
+        <section>
+            <article>
+                <h3>قروب المادة (واتساب)</h3>
+                <p>انضم إلى قروب واتساب الخاص بالمقرر للتواصل مع الزملاء</p>
+            </article>
+
+            <article>
+                <h3>إعلانات المادة</h3>
+                <p id="course-notice">تنبيه: تم رفع الواجب الأول على المنصة الجامعية، والموعد النهائي للتسليم يوم الخميس القادم.</p>
+            </article>
+
+            <article>
+                <h3>الملفات والمصادر</h3>
+                <p>ملخصات، محاضرات، وعروض تقديمية للمقرر متوفرة داخل القناة التعليمية للطلاب.</p>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const title = params.get('title');
+        const code = params.get('code');
+        const uni = params.get('uni');
+        const college = params.get('college');
+        const members = params.get('members');
+
+        const customNotices = {
+            'CS 1111': 'تنبيه: تم رفع نماذج الاختبارات السابقة لمادة مقدمة في الحاسب في مجتمع الجامعة.',
+            'MATH 1101': 'تنبيه: كويز الرياضيات الأول سيقام يوم الثلاثاء القادم خلال قاعة المحاضرة.',
+            'CS 241': 'تنبيه: يرجى تسليم مشروع البرمجة المتقدمة قبل نهاية الأسبوع الحالي على البلاك بورد.',
+            'DES 102': 'تنبيه: تم تعديل موعد ورشة العمل الخاصة ببيئة التصميم إلى يوم الأربعاء.',
+            'MGT 201': 'تنبيه: مناقشة خطة عمل خطة ريادة الأعمال ستكون أونلاين عبر التيمز.',
+            'ENG 202': 'تنبيه: اختبار العرض التقديمي (Presentation) سيبدأ الأسبوع القادم حسب الجدول.',
+            'PHYS 103': 'تنبيه: تجارب المعمل الفيزيائي تبدأ من الأسبوع القادم في مبنى المختبرات.',
+            'SE 311': 'تنبيه: الموعد النهائي لتسليم متطلبات مشروع هندسة البرمجيات هو نهاية الشهر.',
+            'CSC 212': 'تنبيه: تم إتاحة مراجعة خوارزميات هياكل البيانات في قسم المصادر.'
+        };
+
+        if (title && code) {
+            document.getElementById('course-title-header').textContent = `${title} | ${code}`;
+            document.getElementById('course-desc-header').textContent = `قروب خاص بمقرر ${title} لمشاركة الملخصات والمناقشات والإعلانات`;
+            document.getElementById('info-code').textContent = code;
+
+            if (customNotices[code]) {
+                document.getElementById('course-notice').textContent = customNotices[code];
+            } else {
+                document.getElementById('course-notice').textContent = `تنبيه: تم إطلاق قروب ${title} المخصص للتواصل والمتابعة بين الطلاب لمُفردات هذا المقرر.`;
+            }
+        }
+        if (uni) {
+            document.getElementById('info-uni').textContent = uni;
+        }
+        if (college) {
+            document.getElementById('info-college').textContent = college;
+        }
+        if (members) {
+            document.getElementById('info-members').textContent = members;
+        }
+    </script>
+
+</body>
+</html>

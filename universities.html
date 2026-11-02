@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>UniLink - الجامعات</title>
+</head>
+<body>
+
+    <header>
+        <div>
+            <a href="index.html">&lt; العودة</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="add-group-info.html">أضف قروب</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="my-groups.html">قروباتي</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul>
+        </nav>
+        <div>
+            <h1>UniLink</h1>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>اختر جامعتك</h2>
+            <p>أبدأ رحلتك بالإنضمام إلى قروبات كليتك وتخصصك</p>
+
+            <form>
+                <div>
+                    <label for="region-select">اختر المنطقة:</label>
+                    <select id="region-select" onchange="showRegionData(this.value)">
+                        <option value="all">كل المناطق</option>
+                        <option value="riyadh">منطقة الرياض</option>
+                        <option value="makkah">منطقة مكة المكرمة</option>
+                        <option value="madinah">منطقة المدينة المنورة</option>
+                        <option value="eastern">المنطقة الشرقية</option>
+                        <option value="qassim">منطقة القصيم</option>
+                        <option value="asir">منطقة عسير</option>
+                        <option value="tabuk">منطقة تبوك</option>
+                    </select>
+                </div>
+            </form>
+
+            <div id="all" class="region-content">
+                <h3>جامعات من مختلف المناطق</h3>
+                <article>
+                    <h4>جامعة الأمير سطام بن عبدالعزيز</h4>
+                    <p>الدلم - الخرج (منطقة الرياض)</p>
+                    <a href="university-groups.html?uni=sattam">نقل للجامعة &larr;</a>
+                </article>
+                <article>
+                    <h4>جامعة الأميرة نورة بنت عبدالرحمن</h4>
+                    <p>الرياض (منطقة الرياض)</p>
+                    <a href="university-groups.html?uni=nourah">نقل للجامعة &larr;</a>
+                </article>
+                <article>
+                    <h4>جامعة الملك سعود</h4>
+                    <p>الرياض (منطقة الرياض)</p>
+                    <a href="university-groups.html?uni=saud">نقل للجامعة &larr;</a>
+                </article>
+                <article>
+                    <h4>جامعة الملك عبدالعزيز</h4>
+                    <p>جدة (منطقة مكة المكرمة)</p>
+                </article>
+                <article>
+                    <h4>جامعة طيبة</h4>
+                    <p>المدينة المنورة (منطقة المدينة المنورة)</p>
+                </article>
+                <article>
+                    <h4>جامعة الملك فهد للبترول والمعادن</h4>
+                    <p>الظهران (المنطقة الشرقية)</p>
+                </article>
+            </div>
+
+            <div id="riyadh" class="region-content" style="display:none;">
+                <h3>جامعات منطقة الرياض</h3>
+                <article>
+                    <h4>جامعة الأمير سطام بن عبدالعزيز</h4>
+                    <p>الدلم - الخرج</p>
+                    <a href="university-groups.html?uni=sattam">نقل للجامعة &larr;</a>
+                </article>
+                <article>
+                    <h4>جامعة الأميرة نورة بنت عبدالرحمن</h4>
+                    <p>الرياض</p>
+                    <a href="university-groups.html?uni=nourah">نقل للجامعة &larr;</a>
+                </article>
+                <article>
+                    <h4>جامعة الملك سعود</h4>
+                    <p>الرياض</p>
+                    <a href="university-groups.html?uni=saud">نقل للجامعة &larr;</a>
+                </article>
+                <article>
+                    <h4>جامعة الإمام محمد بن سعود الإسلامية</h4>
+                    <p>الرياض</p>
+                </article>
+            </div>
+
+            <div id="makkah" class="region-content" style="display:none;">
+                <h3>جامعات منطقة مكة المكرمة</h3>
+                <article>
+                    <h4>جامعة الملك عبدالعزيز</h4>
+                    <p>جدة</p>
+                </article>
+                <article>
+                    <h4>جامعة أم القرى</h4>
+                    <p>مكة المكرمة</p>
+                </article>
+            </div>
+
+            <div id="madinah" class="region-content" style="display:none;">
+                <h3>جامعات منطقة المدينة المنورة</h3>
+                <article>
+                    <h4>جامعة طيبة</h4>
+                    <p>المدينة المنورة</p>
+                </article>
+            </div>
+
+            <div id="eastern" class="region-content" style="display:none;">
+                <h3>جامعات المنطقة الشرقية</h3>
+                <article>
+                    <h4>جامعة الملك فهد للبترول والمعادن</h4>
+                    <p>الظهران</p>
+                </article>
+            </div>
+
+            <div id="qassim" class="region-content" style="display:none;">
+                <h3>جامعات منطقة القصيم</h3>
+                <article>
+                    <h4>جامعة القصيم</h4>
+                    <p>بريدة</p>
+                </article>
+            </div>
+
+            <div id="asir" class="region-content" style="display:none;">
+                <h3>جامعات منطقة عسير</h3>
+                <article>
+                    <h4>جامعة الملك خالد</h4>
+                    <p>أبها</p>
+                </article>
+            </div>
+
+            <div id="tabuk" class="region-content" style="display:none;">
+                <h3>جامعات منطقة تبوك</h3>
+                <article>
+                    <h4>جامعة تبوك</h4>
+                    <p>تبوك</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function showRegionData(regionId) {
+            const contents = document.querySelectorAll('.region-content');
+            contents.forEach(content => {
+                content.style.display = 'none';
+            });
+            const selectedRegion = document.getElementById(regionId);
+            if (selectedRegion) {
+                selectedRegion.style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>
