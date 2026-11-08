@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>UniLink - مجموعات الجامعة</title>
+</head>
+<body>
+
+    <header>
+        <div>
+            <a href="universities.html">&lt; العودة</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="add-group-info.html">أضف قروب</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="my-groups.html">قروباتي</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul>
+        </nav>
+        <div>
+            <h1>UniLink</h1>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2 id="uni-title">جامعة الأمير سطام بن عبدالعزيز</h2>
+            <p id="uni-desc">اكتشف وانضم إلى قروبات طلاب جامعة الأمير سطام بن عبدالعزيز وتواصل مع زملاءك</p>
+
+            <div id="colleges-list"></div>
+
+            <form>
+                <div>
+                    <label for="sort">الترتيب:</label>
+                    <select id="sort">
+                        <option>الأقدم أولاً</option>
+                        <option>الأحدث أولاً</option>
+                        <option>الأبجدي</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="level">المستوى الدراسي:</label>
+                    <select id="level" onchange="filterByLevel(this.value)">
+                        <option value="all">كل المستويات</option>
+                        <option value="1">المستوى 1</option>
+                        <option value="2">المستوى 2</option>
+                        <option value="3">المستوى 3</option>
+                        <option value="4">المستوى 4</option>
+                        <option value="5">المستوى 5</option>
+                        <option value="6">المستوى 6</option>
+                        <option value="7">المستوى 7</option>
+                        <option value="8">المستوى 8</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="search-course">بحث:</label>
+                    <input type="search" id="search-course" placeholder="ابحث عن اسم مقرر ...">
+                </div>
+            </form>
+
+            <section>
+                <h3>جميع القروبات</h3>
+                <div id="groups-container"></div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const uni = urlParams.get('uni') || 'sattam';
+
+        const universitiesData = {
+            sattam: {
+                title: 'جامعة الأمير سطام بن عبدالعزيز',
+                desc: 'اكتشف وانضم إلى قروبات طلاب جامعة الأمير سطام بن عبدالعزيز وتواصل مع زملاءك',
+                colleges: [
+                    'كلية الهندسة وعلوم الحاسب',
+                    'كلية إدارة الأعمال',
+                    'كلية العلوم والدراسات الإنسانية',
+                    'كلية الطب',
+                    'الكلية التطبيقية',
+                    'كلية التربية',
+                    'كلية الصيدلة'
+                ],
+                groups: [
+                    { title: 'مقدمة في الحاسب', code: 'CS 1111', college: 'كلية الهندسة وعلوم الحاسب', level: '1', members: 256 },
+                    { title: 'رياضيات 1', code: 'MATH 1101', college: 'كلية العلوم والدراسات الإنسانية', level: '3', members: 312 },
+                    { title: 'برمجة متقدمة', code: 'CS 241', college: 'كلية الهندسة وعلوم الحاسب', level: '5', members: 180 },
+                    { title: 'مبادئ الإدارة', code: 'BUS 101', college: 'كلية إدارة الأعمال', level: '2', members: 140 }
+                ]
+            },
+            nourah: {
+                title: 'جامعة الأميرة نورة بنت عبدالرحمن',
+                desc: 'اكتشف وانضم إلى قروبات طالبات جامعة الأميرة نورة بنت عبدالرحمن',
+                colleges: [
+                    'كلية علوم الحاسب والمعلومات',
+                    'كلية إدارة الأعمال',
+                    'كلية التصاميم والفنون',
+                    'كلية اللغات',
+                    'كلية الآداب',
+                    'كلية العلوم',
+                    'كلية الصيدلة',
+                    'كلية الهندسة'
+                ],
+                groups: [
+                    { title: 'تصميم واجهات المستخدم', code: 'DES 102', college: 'كلية التصاميم والفنون', level: '2', members: 140 },
+                    { title: 'ريادة الأعمال', code: 'MGT 201', college: 'كلية إدارة الأعمال', level: '4', members: 210 },
+                    { title: 'لغة إنجليزية متقدمة', code: 'ENG 202', college: 'كلية اللغات', level: '6', members: 195 },
+                    { title: 'أساسيات البرمجة', code: 'CS 101', college: 'كلية علوم الحاسب والمعلومات', level: '1', members: 280 }
+                ]
+            },
+            saud: {
+                title: 'جامعة الملك سعود',
+                desc: 'اكتشف وانضم إلى قروبات طلاب جامعة الملك سعود',
+                colleges: [
+                    'كلية علوم الحاسب والمعلومات',
+                    'كلية الهندسة',
+                    'كلية العلوم',
+                    'كلية إدارة الأعمال',
+                    'كلية الطب',
+                    'كلية العمارة والتخطيط',
+                    'كلية اللغات والترجمة'
+                ],
+                groups: [
+                    { title: 'فيزياء عامة', code: 'PHYS 103', college: 'كلية العلوم', level: '1', members: 320 },
+                    { title: 'هندسة برمجيات', code: 'SE 311', college: 'كلية علوم الحاسب والمعلومات', level: '4', members: 280 },
+                    { title: 'هياكل بيانات', code: 'CSC 212', college: 'كلية علوم الحاسب والمعلومات', level: '7', members: 310 },
+                    { title: 'ميكانيكا المواد', code: 'ME 201', college: 'كلية الهندسة', level: '3', members: 190 }
+                ]
+            }
+        };
+
+        const currentUni = universitiesData[uni] || universitiesData.sattam;
+
+        document.getElementById('uni-title').textContent = currentUni.title;
+        document.getElementById('uni-desc').textContent = currentUni.desc;
+
+        const collegesListDiv = document.getElementById('colleges-list');
+        currentUni.colleges.forEach(col => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.textContent = col;
+            btn.onclick = () => filterByCollege(col);
+            collegesListDiv.appendChild(btn);
+        });
+        const allBtn = document.createElement('button');
+        allBtn.type = 'button';
+        allBtn.textContent = 'جميع الكليات';
+        allBtn.onclick = () => filterByCollege('all');
+        collegesListDiv.appendChild(allBtn);
+
+        function renderGroups(groups) {
+            const container = document.getElementById('groups-container');
+            container.innerHTML = '';
+            groups.forEach(g => {
+                const article = document.createElement('article');
+                article.className = 'group-item';
+                article.setAttribute('data-level', g.level);
+                article.setAttribute('data-college', g.college);
+
+                const linkParams = new URLSearchParams({
+                    title: g.title,
+                    code: g.code,
+                    uni: currentUni.title,
+                    college: g.college,
+                    members: g.members
+                }).toString();
+
+                article.innerHTML = `
+                    <h4>${g.title} | ${g.code}</h4>
+                    <p>${currentUni.title}</p>
+                    <p><small>${g.college}</small></p>
+                    <span>${g.members} عضو</span>
+                    <a href="group-details.html?${linkParams}">انضم للقروب</a>
+                `;
+                container.appendChild(article);
+            });
+        }
+
+        renderGroups(currentUni.groups);
+
+        function filterByCollege(collegeName) {
+            const items = document.querySelectorAll('.group-item');
+            items.forEach(item => {
+                if (collegeName === 'all' || item.getAttribute('data-college') === collegeName) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function filterByLevel(level) {
+            const items = document.querySelectorAll('.group-item');
+            items.forEach(item => {
+                if (level === 'all' || item.getAttribute('data-level') === level) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

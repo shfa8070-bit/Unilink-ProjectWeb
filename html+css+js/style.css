@@ -1,0 +1,296 @@
+:root {
+    --primary-color: #008080;
+    --primary-hover: #006666;
+    --accent-teal: #20B2AA;
+    --bg-light: #F0F7F7;
+    --card-bg: #FFFFFF;
+    --text-color: #1A3333;
+    --text-muted: #557A7A;
+    --border-color: #B2D8D8;
+    --shadow: 0 4px 15px rgba(0, 128, 128, 0.06);
+    --radius: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-color);
+    direction: rtl;
+    text-align: right;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    max-width: 1100px;
+    width: 90%;
+    margin: 30px auto;
+}
+
+header {
+    background-color: var(--card-bg);
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+header h1 {
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+header nav a, a, a:visited {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+header nav a:hover, a:hover {
+    color: var(--primary-color);
+}
+
+.back-link {
+    color: var(--primary-color) !important;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.action-box {
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+.btn-main, .btn-submit {
+    background-color: var(--primary-color);
+    color: #ffffff !important;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    width: fit-content;
+    align-self: flex-start;
+}
+
+.btn-main:hover, .btn-submit:hover {
+    background-color: var(--primary-hover);
+    text-decoration: none;
+}
+
+main > section > a,
+header + main section > a {
+    display: inline-block;
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+.region-content, #uni-list, #groups-container, .cards-grid, main > section > div {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+}
+
+article, .uni-card, .group-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    text-align: right;
+}
+
+article h3, article h4, .uni-card h3, .uni-card h4 {
+    color: var(--primary-color);
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+article p, .uni-card p {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+article a, .uni-card a {
+    color: #ffffff !important;
+    background-color: var(--primary-color);
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 12px;
+    text-align: center;
+    display: inline-block;
+    margin-top: 10px;
+    width: auto;
+    align-self: flex-start;
+}
+
+article a:hover, .uni-card a:hover {
+    background-color: var(--primary-hover);
+    text-decoration: none;
+}
+
+.auth-section {
+    max-width: 500px;
+    margin: 30px auto;
+    text-align: right;
+}
+
+form {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-top: 20px;
+    border: 1px solid var(--border-color);
+    text-align: right;
+}
+
+form div {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.remember-box {
+    flex-direction: row !important;
+    align-items: center;
+    gap: 8px;
+}
+
+.remember-box a {
+    margin-right: auto;
+    color: var(--primary-color);
+    font-size: 13px;
+}
+
+label {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: var(--text-color);
+    text-align: right;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+input[type="search"],
+input[type="file"],
+select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background-color: #fafbfc;
+    text-align: right;
+    color: var(--text-color);
+}
+
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-color);
+    margin: 0;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary-color);
+    background-color: #ffffff;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.auth-footer a {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+details {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 12px;
+}
+
+summary {
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+details p {
+    margin-top: 10px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+ul {
+    margin-right: 20px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+ul li {
+    margin-bottom: 6px;
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    header nav ul {
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    form, .auth-section {
+        width: 100%;
+    }
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>UniLink - أضف قروبك</title>
+</head>
+<body>
+
+    <header>
+        <div>
+            <a href="add-group-info.html">&lt; العودة</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="add-group-info.html">أضف قروب</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="my-groups.html">قروباتي</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul>
+        </nav>
+        <div>
+            <h1>UniLink</h1>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>أضف قروبك</h2>
+            <p>ساعد زملاءك بالوصول إلى قروبات مفيدة وآمنة</p>
+
+            <form action="#" method="POST">
+                <div>
+                    <label for="university">الجامعة *</label>
+                    <select id="university" onchange="updateColleges(this.value)" required>
+                        <option value="">اختر جامعتك</option>
+                        <option value="sattam">جامعة الأمير سطام بن عبدالعزيز</option>
+                        <option value="nourah">جامعة الأميرة نورة بنت عبدالرحمن</option>
+                        <option value="saud">جامعة الملك سعود</option>
+                        <option value="kau">جامعة الملك عبدالعزيز</option>
+                        <option value="kfupm">جامعة الملك فهد للبترول والمعادن</option>
+                        <option value="qassim">جامعة القصيم</option>
+                        <option value="taibah">جامعة طيبة</option>
+                        <option value="kku">جامعة الملك خالد</option>
+                        <option value="uqu">جامعة أم القرى</option>
+                        <option value="ut">جامعة تبوك</option>
+                        <option value="imamu">جامعة الإمام محمد بن سعود الإسلامية</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="college">الكلية *</label>
+                    <select id="college" required>
+                        <option value="">اختر كليتك</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="group-type">نوع القروب *</label>
+                    <select id="group-type" required>
+                        <option value="">اختر نوع القروب</option>
+                        <option value="course">مقرر دراسي</option>
+                        <option value="study-group">مجموعة مذاكرة</option>
+                        <option value="announcements">إعلانات وتنبيهات</option>
+                        <option value="resources">ملفات ومصادر</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="course-code">رمز المقرر أو اسم القروب *</label>
+                    <input type="text" id="course-code" placeholder="مثال: SE 4111 أو ملخصات البرمجة" required>
+                </div>
+
+                <div>
+                    <label for="group-link">رابط القروب *</label>
+                    <input type="url" id="group-link" placeholder="https://chat.whatsapp.com/..." required>
+                </div>
+
+                <div>
+                    <label for="description">وصف مختصر (اختياري)</label>
+                    <input type="text" id="description" placeholder="مثال: قروب لمشاركة الملخصات والإعلانات">
+                </div>
+
+                <ul>
+                    <li>تأكد من صحة الرابط</li>
+                    <li>اختر النوع المناسب</li>
+                    <li>أضف وصف واضح</li>
+                    <li>سيساعد هذا زملاءك</li>
+                </ul>
+
+                <div>
+                    <button type="submit">إضافة القروب</button>
+                    <button type="button">إلغاء</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        function updateColleges(uni) {
+            const collegeSelect = document.getElementById('college');
+            collegeSelect.innerHTML = '<option value="">اختر كليتك</option>';
+            
+            let colleges = [];
+            
+            if (uni === 'sattam') {
+                colleges = [
+                    'كلية الهندسة وعلوم الحاسب',
+                    'كلية إدارة الأعمال',
+                    'كلية العلوم والدراسات الإنسانية',
+                    'كلية الطب',
+                    'الكلية التطبيقية',
+                    'كلية التربية',
+                    'كلية الصيدلة',
+                    'كلية العلوم الطبية التطبيقية',
+                    'كلية طب الأسنان'
+                ];
+            } else if (uni === 'nourah') {
+                colleges = [
+                    'كلية علوم الحاسب والمعلومات',
+                    'كلية إدارة الأعمال',
+                    'كلية التصاميم والفنون',
+                    'كلية اللغات',
+                    'كلية الآداب',
+                    'كلية العلوم',
+                    'كلية الصيدلة',
+                    'كلية الهندسة',
+                    'كلية الطب البشري',
+                    'كلية التمريض',
+                    'كلية خدمة المجتمع'
+                ];
+            } else if (uni === 'saud') {
+                colleges = [
+                    'كلية علوم الحاسب والمعلومات',
+                    'كلية الهندسة',
+                    'كلية العلوم',
+                    'كلية إدارة الأعمال',
+                    'كلية الطب',
+                    'كلية العمارة والتخطيط',
+                    'كلية اللغات والترجمة',
+                    'كلية الحقوق والعلوم السياسية',
+                    'كلية الصيدلة',
+                    'كلية طب الأسنان',
+                    'كلية التربية'
+                ];
+            }
+
+            colleges.forEach(col => {
+                const opt = document.createElement('option');
+                opt.value = col;
+                opt.textContent = col;
+                collegeSelect.appendChild(opt);
+            });
+        }
+    </script>
+
+</body>
+</html>
