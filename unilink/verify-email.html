@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>UniLink - تحقق من الحساب الجامعي</title>
+</head>
+<body>
+    <header>
+        <div><a href="index.html" class="arrow-back" title="رجوع">&gt;</a></div>
+        <nav><ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="add-group-form.html">أضف قروب</a></li>
+                <li><a href="my-groups.html">القروبات</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul></nav>
+        <div><h1>UniLink</h1></div>
+    </header>
+
+    <main>
+        <section class="auth-section">
+            <h2>تحقق من حسابك الجامعي</h2>
+            <p>أدخل بريدك الجامعي لتلقي رمز التحقق والانضمام للمجموعة</p>
+
+            <form onsubmit="handleVerification(event)">
+                <div>
+                    <label for="university-email">البريد الجامعي</label>
+                    <input type="email" id="university-email" placeholder="أدخل البريد الجامعي" required>
+                </div>
+                <div id="otp-box" style="display:none;">
+                    <label for="otp-code">رمز التحقق (OTP)</label>
+                    <input type="text" id="otp-code" placeholder="أدخل رمز التحقق المكون من 6 أرقام">
+                </div>
+                <div>
+                    <button type="submit" id="verify-btn" class="btn-submit">إرسال الرمز</button>
+                </div>
+            </form>
+
+            <p class="auth-footer">نحن نحافظ على خصوصية بياناتك ولن نشاركها مع أي جهة خارجية</p>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        var u = getCurrentUser();
+        if (u && u.email) document.getElementById('university-email').value = u.email;
+        var codeSent = false;
+        function handleVerification(event) {
+            event.preventDefault();
+            var otpBox = document.getElementById('otp-box');
+            var otpInput = document.getElementById('otp-code');
+            var btn = document.getElementById('verify-btn');
+            if (!codeSent) {
+                codeSent = true;
+                otpBox.style.display = 'flex';
+                otpInput.required = true;
+                btn.textContent = 'تأكيد الرمز والانضمام';
+                alert('تم إرسال رمز التحقق بنجاح إلى بريدك الجامعي');
+            } else {
+                alert('تم التحقق من البريد الجامعي بنجاح!');
+                window.location.href = 'group-details.html';
+            }
+        }
+    </script>
+</body>
+</html>

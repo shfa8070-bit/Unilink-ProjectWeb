@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>UniLink - المجتمع الطلابي</title>
+</head>
+<body>
+    <header>
+        <div><a href="index.html" class="arrow-back" title="رجوع">&gt;</a></div>
+        <nav><ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="add-group-form.html">أضف قروب</a></li>
+                <li><a href="my-groups.html">القروبات</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul></nav>
+        <div><h1>UniLink</h1></div>
+    </header>
+
+    <main>
+        <section>
+            <h2>المجتمع الطلابي</h2>
+            <p>استعرض المصادر والملخصات التي شاركها الطلاب أو أضف مصدراً جديداً</p>
+            <div class="action-box">
+                <a href="add-share-form.html" class="btn-main">إضافة مصدر تعليمي</a>
+            </div>
+        </section>
+
+        <section>
+            <h2>المصادر المشتركة</h2>
+            <div id="shared-items-grid" class="cards-grid"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        var grid = document.getElementById('shared-items-grid');
+        var contents = getAllContentsForActiveUni();
+
+        if (!contents.length) {
+            grid.innerHTML = '<div class="empty-data-msg">لايوجد بيانات</div>';
+        } else {
+            contents.forEach(function(item, idx) {
+                var art = document.createElement('article');
+                var fullText = (item.text_body && item.text_body !== item.summary) ? item.text_body : '';
+                var hasMore = Boolean(fullText);
+                var bodyHtml = '';
+                if (hasMore) {
+                    bodyHtml += '<div id="extra-text-' + idx + '" style="display:none;"><p>' + escapeHtml(fullText) + '</p></div>' +
+                        '<button type="button" class="btn-back" style="padding:4px 10px;font-size:12px;margin-bottom:8px;" id="toggle-text-' + idx + '">عرض النص الكامل</button>';
+                }
+                var dlFileName = item.file_name || ((item.title || 'مصدر') + '.txt');
+                if (item.file_name || item.content_type === 'ملف') {
+                    bodyHtml += '<p><button type="button" class="btn-download-link" id="dl-comm-' + idx + '">تحميل الملف: ' + escapeHtml(dlFileName) + '</button></p>';
+                }
+                var courseBadge = item.course_code ? '<span class="badge">' + escapeHtml(item.course_code) + '</span> ' : '';
+                var uniLine = item.university ? '<p><small>الجامعة: ' + escapeHtml(item.university) + '</small></p>' : '';
+                var authorLabel = item.author ? ' | بواسطة: ' + escapeHtml(item.author) : '';
+                art.innerHTML = '<h3>' + escapeHtml(item.title) + '</h3>' +
+                    '<p>' + courseBadge + 'النوع: <span class="badge">' + escapeHtml(item.content_type) + '</span>' + authorLabel + '</p>' +
+                    uniLine +
+                    '<p>' + escapeHtml(item.summary) + '</p>' + bodyHtml;
+                grid.appendChild(art);
+
+                if (hasMore) {
+                    document.getElementById('toggle-text-' + idx).onclick = function() {
+                        var box = document.getElementById('extra-text-' + idx);
+                        var btn = document.getElementById('toggle-text-' + idx);
+                        if (box.style.display === 'none') {
+                            box.style.display = 'block';
+                            btn.textContent = 'إخفاء النص الإضافي';
+                        } else {
+                            box.style.display = 'none';
+                            btn.textContent = 'عرض النص الكامل';
+                        }
+                    };
+                }
+                var dlBtn = document.getElementById('dl-comm-' + idx);
+                if (dlBtn) {
+                    dlBtn.onclick = function() {
+                        downloadGeneratedFile(
+                            dlFileName,
+                            item.title,
+                            (item.summary || '') + '\n' + (item.text_body || ''),
+                            'الجامعة: ' + (item.university || '') + ' | المقرر: ' + (item.course_code || '')
+                        );
+                    };
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>UniLink - نموذج مشاركة مصدر</title>
+</head>
+<body>
+    <header>
+        <div><a href="index.html" class="arrow-back" title="رجوع">&gt;</a></div>
+        <nav><ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="add-group-form.html">أضف قروب</a></li>
+                <li><a href="my-groups.html">القروبات</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul></nav>
+        <div><h1>UniLink</h1></div>
+    </header>
+
+    <main>
+        <section class="auth-section">
+            <h2>إضافة مصدر تعليمي</h2>
+            <form onsubmit="saveNewContent(event)">
+                <div>
+                    <label for="university">الجامعة</label>
+                    <select id="university" required>
+                        <option value="جامعة الأمير سطام بن عبدالعزيز">جامعة الأمير سطام بن عبدالعزيز</option>
+                        <option value="جامعة الملك سعود">جامعة الملك سعود</option>
+                        <option value="جامعة الأميرة نورة بنت عبدالرحمن">جامعة الأميرة نورة بنت عبدالرحمن</option>
+                        <option value="كل الجامعات">كل الجامعات</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="course_code">المادة / رمز المقرر</label>
+                    <input type="text" id="course_code" placeholder="مثال: SE 4111 أو SWE 312" required>
+                </div>
+                <div>
+                    <label for="title">عنوان المصدر</label>
+                    <input type="text" id="title" placeholder="مثال: ملخص اختبار منتصف الفصل" required>
+                </div>
+                <div>
+                    <label for="content_type">نوع المصدر</label>
+                    <select id="content_type" onchange="toggleSourceInputs(this.value)" required>
+                        <option value="">اختر نوع المصدر</option>
+                        <option value="نص">نص</option>
+                        <option value="ملف">ملف</option>
+                        <option value="فيديو">فيديو</option>
+                        <option value="صوت">صوت</option>
+                    </select>
+                </div>
+                <div id="text-input-box" style="display:none;">
+                    <label for="text_body">محتوى النص</label>
+                    <textarea id="text_body" rows="4" placeholder="اكتب النص أو الملخص هنا..."></textarea>
+                </div>
+                <div id="file-input-box" style="display:none;">
+                    <label id="file-label" for="source_file">رفع الملف</label>
+                    <input id="source_file" type="file">
+                </div>
+                <div>
+                    <label for="summary">الملخص</label>
+                    <input type="text" id="summary" placeholder="وصف مختصر للمصدر" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">نشر المصدر</button>
+                    <a href="community.html" class="btn-back">العودة للمجتمع</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        var u = getCurrentUser();
+        if (u && u.university && u.university !== 'كل الجامعات') {
+            document.getElementById('university').value = u.university;
+        }
+        function toggleSourceInputs(typeVal) {
+            var textBox = document.getElementById('text-input-box');
+            var fileBox = document.getElementById('file-input-box');
+            var fileInput = document.getElementById('source_file');
+            var fileLabel = document.getElementById('file-label');
+            textBox.style.display = 'none';
+            fileBox.style.display = 'none';
+            if (typeVal === 'نص') textBox.style.display = 'flex';
+            else if (typeVal === 'ملف') {
+                fileBox.style.display = 'flex';
+                fileLabel.textContent = 'ارفع الملف (PDF, DOCX, PPTX, TXT...)';
+                fileInput.accept = '.pdf,.doc,.docx,.ppt,.pptx,.txt,.zip';
+            } else if (typeVal === 'فيديو') {
+                fileBox.style.display = 'flex';
+                fileLabel.textContent = 'ارفع مقطع الفيديو (MP4, MOV, WEBM...)';
+                fileInput.accept = 'video/*';
+            } else if (typeVal === 'صوت') {
+                fileBox.style.display = 'flex';
+                fileLabel.textContent = 'ارفع الملف الصوتي (MP3, WAV, M4A...)';
+                fileInput.accept = 'audio/*';
+            }
+        }
+        function saveNewContent(e) {
+            e.preventDefault();
+            var fileInput = document.getElementById('source_file');
+            var fileName = (fileInput && fileInput.files && fileInput.files[0]) ? fileInput.files[0].name : '';
+            var contents = getContents();
+            var curr = getCurrentUser();
+            var courseCode = document.getElementById('course_code').value.trim();
+            var titleVal = document.getElementById('title').value.trim();
+            var summaryVal = document.getElementById('summary').value.trim();
+            var authorName = (curr && curr.name) ? curr.name : 'شهد';
+
+            contents.unshift({
+                university: document.getElementById('university').value.trim(),
+                course_code: courseCode,
+                title: titleVal,
+                content_type: document.getElementById('content_type').value,
+                summary: summaryVal,
+                text_body: document.getElementById('text_body').value.trim(),
+                file_name: fileName,
+                author: authorName
+            });
+            saveContents(contents);
+
+            if (courseCode && fileName) {
+                addGroupFile(courseCode, {
+                    title: titleVal,
+                    fileName: fileName,
+                    note: summaryVal,
+                    author: authorName
+                });
+            }
+            window.location.href = 'community.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>UniLink - مجموعات الجامعة</title>
+</head>
+<body>
+    <header>
+        <div><a href="universities.html" class="arrow-back" title="رجوع">&gt;</a></div>
+        <nav><ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="add-group-form.html">أضف قروب</a></li>
+                <li><a href="my-groups.html">القروبات</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul></nav>
+        <div><h1>UniLink</h1></div>
+    </header>
+
+    <main>
+        <section>
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+                <div>
+                    <h2 id="uni-title">جامعة الأمير سطام بن عبدالعزيز</h2>
+                    <p id="uni-desc">اكتشف وانضم إلى قروبات طلاب جامعة الأمير سطام بن عبدالعزيز وتواصل مع زملاءك</p>
+                </div>
+                <a id="top-add-group-btn" href="add-group-form.html" class="btn-main">أضف قروب</a>
+            </div>
+
+            <div id="colleges-list" class="action-box"></div>
+
+            <form onsubmit="event.preventDefault();">
+                <div>
+                    <label for="level">المستوى الدراسي:</label>
+                    <select id="level" onchange="applyFilters()">
+                        <option value="all">كل المستويات</option>
+                        <option value="1">المستوى 1</option>
+                        <option value="2">المستوى 2</option>
+                        <option value="3">المستوى 3</option>
+                        <option value="4">المستوى 4</option>
+                        <option value="5">المستوى 5</option>
+                        <option value="6">المستوى 6</option>
+                        <option value="7">المستوى 7</option>
+                        <option value="8">المستوى 8</option>
+                    </select>
+                </div>
+            </form>
+
+            <section>
+                <h3>جميع القروبات</h3>
+                <div id="groups-container" class="cards-grid"></div>
+            </section>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        var urlParams = new URLSearchParams(window.location.search);
+        var uni = urlParams.get('uni') || 'sattam';
+
+        var universitiesData = {
+            sattam: {
+                title: 'جامعة الأمير سطام بن عبدالعزيز',
+                desc: 'اكتشف وانضم إلى قروبات طلاب جامعة الأمير سطام بن عبدالعزيز وتواصل مع زملاءك',
+                colleges: [
+                    'كلية الهندسة وعلوم الحاسب',
+                    'كلية إدارة الأعمال',
+                    'كلية العلوم والدراسات الإنسانية',
+                    'كلية العلوم',
+                    'كلية الطب',
+                    'كلية الصيدلة',
+                    'كلية التربية'
+                ],
+                groups: [
+                    { title: 'مقدمة في الحاسب', code: 'CS 1111', college: 'كلية الهندسة وعلوم الحاسب', level: '1', members: randomMemberCount(90, 260), leader: 'شهد', time: 'الأحد 5:00 مساءً' },
+                    { title: 'برمجة متقدمة', code: 'CS 241', college: 'كلية الهندسة وعلوم الحاسب', level: '5', members: randomMemberCount(65, 210), leader: 'جنان', time: 'الإثنين 6:00 مساءً' },
+                    { title: 'مبادئ الإدارة', code: 'BUS 101', college: 'كلية إدارة الأعمال', level: '2', members: randomMemberCount(55, 185), leader: 'ريم', time: 'الثلاثاء 4:00 مساءً' },
+                    { title: 'ميكانيكا وكهرباء', code: 'PHYS 101', college: 'كلية العلوم', level: '3', members: randomMemberCount(40, 150), leader: 'لمى', time: 'الأربعاء 5:30 مساءً' }
+                ]
+            },
+            nourah: {
+                title: 'جامعة الأميرة نورة بنت عبدالرحمن',
+                desc: 'اكتشف وانضم إلى قروبات طالبات جامعة الأميرة نورة بنت عبدالرحمن',
+                colleges: [
+                    'كلية علوم الحاسب والمعلومات',
+                    'كلية إدارة الأعمال',
+                    'كلية العلوم',
+                    'كلية التصاميم والفنون',
+                    'كلية اللغات',
+                    'كلية التربية'
+                ],
+                groups: [
+                    { title: 'تصميم واجهات المستخدم', code: 'DES 102', college: 'كلية التصاميم والفنون', level: '2', members: randomMemberCount(60, 195), leader: 'نوف', time: 'الأحد 6:00 مساءً' },
+                    { title: 'أساسيات البرمجة', code: 'CS 101', college: 'كلية علوم الحاسب والمعلومات', level: '1', members: randomMemberCount(110, 290), leader: 'دانة', time: 'الثلاثاء 5:00 مساءً' },
+                    { title: 'كيمياء عامة', code: 'CHEM 101', college: 'كلية العلوم', level: '2', members: randomMemberCount(45, 160), leader: 'أثير', time: 'الخميس 4:00 مساءً' }
+                ]
+            },
+            saud: {
+                title: 'جامعة الملك سعود',
+                desc: 'اكتشف وانضم إلى قروبات طلاب جامعة الملك سعود',
+                colleges: [
+                    'كلية علوم الحاسب والمعلومات',
+                    'كلية الهندسة',
+                    'كلية العلوم',
+                    'كلية إدارة الأعمال',
+                    'كلية الطب',
+                    'كلية الحقوق والعلوم السياسية',
+                    'كلية الآداب'
+                ],
+                groups: [
+                    { title: 'هندسة برمجيات', code: 'SE 311', college: 'كلية علوم الحاسب والمعلومات', level: '4', members: randomMemberCount(95, 280), leader: 'أروى', time: 'الإثنين 5:00 مساءً' },
+                    { title: 'فيزياء عامة', code: 'PHYS 103', college: 'كلية العلوم', level: '1', members: randomMemberCount(120, 320), leader: 'نجلاء', time: 'الأربعاء 4:00 مساءً' },
+                    { title: 'تحليل عددي', code: 'MATH 244', college: 'كلية العلوم', level: '6', members: randomMemberCount(50, 170), leader: 'غادة', time: 'الخميس 6:00 مساءً' }
+                ]
+            }
+        };
+
+        var currentUni = universitiesData[uni] || universitiesData.sattam;
+        document.getElementById('uni-title').textContent = currentUni.title;
+        document.getElementById('uni-desc').textContent = currentUni.desc;
+        document.getElementById('top-add-group-btn').href = 'add-group-form.html?uni=' + encodeURIComponent(currentUni.title);
+
+        var customGroups = getGroups().filter(function(g) { return g.university === currentUni.title; }).map(function(g, i) {
+            var supName = (!g.leader_name || g.leader_name === 'نوره') ? pickRandomSupervisor(g.group_name + i) : g.leader_name;
+            var memCount = (!g.members || Number(g.members) === 1) ? randomMemberCount(20, 220) : Number(g.members);
+            return {
+                title: g.group_name,
+                code: g.course_code,
+                college: g.college || 'كلية العلوم',
+                level: g.level || '1',
+                members: memCount,
+                leader: supName,
+                time: g.meeting_time || 'حسب الجدول'
+            };
+        });
+
+        var allGroups = customGroups.concat(currentUni.groups);
+        var selectedCollege = 'all';
+        var collegesListDiv = document.getElementById('colleges-list');
+
+        currentUni.colleges.forEach(function(col) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn-back college-btn';
+            btn.textContent = col;
+            btn.onclick = function() {
+                selectedCollege = col;
+                document.querySelectorAll('.college-btn').forEach(function(b) { b.classList.remove('active-filter'); });
+                btn.classList.add('active-filter');
+                applyFilters();
+            };
+            collegesListDiv.appendChild(btn);
+        });
+
+        var allBtn = document.createElement('button');
+        allBtn.type = 'button';
+        allBtn.className = 'btn-main college-btn active-filter';
+        allBtn.textContent = 'جميع الكليات';
+        allBtn.onclick = function() {
+            selectedCollege = 'all';
+            document.querySelectorAll('.college-btn').forEach(function(b) { b.classList.remove('active-filter'); });
+            allBtn.classList.add('active-filter');
+            applyFilters();
+        };
+        collegesListDiv.appendChild(allBtn);
+
+        function openGroupDetails(g) {
+            var linkParams = new URLSearchParams({
+                title: g.title,
+                code: g.code,
+                uni: currentUni.title,
+                college: g.college,
+                leader: g.leader,
+                time: g.time
+            }).toString();
+            window.location.href = 'group-details.html?' + linkParams;
+        }
+
+        function applyFilters() {
+            var selectedLevel = document.getElementById('level').value;
+            var container = document.getElementById('groups-container');
+            container.innerHTML = '';
+
+            var matched = allGroups.filter(function(g) {
+                var colOk = (selectedCollege === 'all' || g.college === selectedCollege);
+                var lvlOk = (selectedLevel === 'all' || String(g.level) === String(selectedLevel));
+                return colOk && lvlOk;
+            });
+
+            if (!matched.length) {
+                container.innerHTML = '<div class="empty-data-msg">لايوجد بيانات</div>';
+                return;
+            }
+
+            matched.forEach(function(g, idx) {
+                var courseFiles = getGroupFiles(g.code);
+                var filesHtml = '';
+                if (courseFiles.length) {
+                    filesHtml = '<div class="file-item-box"><strong>ملفات المادة (' + courseFiles.length + '):</strong><br>' +
+                        courseFiles.map(function(f, fIdx) {
+                            var fn = f.fileName || (f.title + '.txt');
+                            return '<div style="margin-top:4px;">• ' + escapeHtml(f.title) +
+                                ' <button type="button" class="btn-download-link" onclick="downloadGeneratedFile(' +
+                                '\'' + escapeHtml(fn).replace(/'/g, "\\'") + '\',' +
+                                '\'' + escapeHtml(f.title).replace(/'/g, "\\'") + '\',' +
+                                '\'' + escapeHtml(f.note || '').replace(/'/g, "\\'") + '\',' +
+                                '\'' + escapeHtml(g.code + ' - ' + currentUni.title).replace(/'/g, "\\'") + '\')">تحميل الملف</button></div>';
+                        }).join('') + '</div>';
+                }
+                var filesUrl = 'group-files.html?title=' + encodeURIComponent(g.title) + '&code=' + encodeURIComponent(g.code);
+
+                var article = document.createElement('article');
+                article.innerHTML = '<h4>' + escapeHtml(g.title) + ' | ' + escapeHtml(g.code) + '</h4>' +
+                    '<p>' + escapeHtml(currentUni.title) + '</p>' +
+                    '<p><small>' + escapeHtml(g.college) + ' — المستوى ' + escapeHtml(g.level) + ' — المشرف: ' + escapeHtml(g.leader) + '</small></p>' +
+                    '<span>' + escapeHtml(g.members) + ' عضو</span>' +
+                    filesHtml +
+                    '<div class="form-actions">' +
+                        '<button type="button" class="card-btn" id="join-btn-' + idx + '">انضم للقروب</button>' +
+                        '<a href="' + filesUrl + '" class="btn-back" style="padding:6px 12px;font-size:12px;margin-top:10px;">ملفات المادة</a>' +
+                    '</div>';
+                container.appendChild(article);
+                document.getElementById('join-btn-' + idx).onclick = function() {
+                    openGroupDetails(g);
+                };
+            });
+        }
+
+        applyFilters();
+    </script>
+</body>
+</html>

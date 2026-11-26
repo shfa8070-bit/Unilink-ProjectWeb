@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>UniLink - الواجهة الرئيسية</title>
+</head>
+<body>
+    <header>
+        <div><h1>UniLink</h1></div>
+        <nav><ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="add-group-form.html">أضف قروب</a></li>
+                <li><a href="my-groups.html">القروبات</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul></nav>
+    </header>
+
+    <main>
+        <section>
+            <p>بوابتك لمجموعات طلاب الجامعات</p>
+            <h2>دخول فوري لمجموعات جامعتك</h2>
+            <p>وفّر وقتك بالوصول إلى قروبات موثوقة لكل الجامعات مقسمة ومنظمة حسب التخصصات والكليات</p>
+
+            <div class="cards-grid">
+                <article><h3>دخول فوري</h3><p>بدون خطوات معقدة</p></article>
+                <article><h3>طلاب فقط</h3><p>كل القروبات مخصصة لطلاب الجامعة</p></article>
+                <article><h3>كل الكليات</h3><p>قروبات جميع التخصصات</p></article>
+                <article><h3>خصوصية</h3><p>بيئة آمنة ومنظمة للطلاب</p></article>
+            </div>
+        </section>
+
+        <section>
+            <h2>اختر جامعتك</h2>
+            <p>استعرض جامعتك وتصفح قروبات الكليات والتخصصات</p>
+
+            <form onsubmit="event.preventDefault();">
+                <div>
+                    <label for="region-select">اختر المنطقة:</label>
+                    <select id="region-select" onchange="showRegionData(this.value)">
+                        <option value="all">كل المناطق</option>
+                        <option value="riyadh">منطقة الرياض</option>
+                        <option value="makkah">منطقة مكة المكرمة</option>
+                        <option value="madinah">منطقة المدينة المنورة</option>
+                        <option value="eastern">المنطقة الشرقية</option>
+                        <option value="qassim">منطقة القصيم</option>
+                        <option value="asir">منطقة عسير</option>
+                        <option value="tabuk">منطقة تبوك</option>
+                        <option value="hail">منطقة حائل</option>
+                        <option value="northern_borders">منطقة الحدود الشمالية</option>
+                        <option value="jazan">منطقة جازان</option>
+                        <option value="najran">منطقة نجران</option>
+                        <option value="bahah">منطقة الباحة</option>
+                        <option value="jouf">منطقة الجوف</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="search-uni">بحث:</label>
+                    <input type="search" id="search-uni" onkeyup="filterUniversities(this.value)" placeholder="ابحث عن اسم الجامعة ...">
+                </div>
+            </form>
+
+            <div id="all" class="region-content">
+                <article class="uni-card" data-name="جامعة الأمير سطام بن عبدالعزيز">
+                    <h4>جامعة الأمير سطام بن عبدالعزيز</h4>
+                    <p>الدلم - الخرج (منطقة الرياض)</p>
+                    <a href="university-groups.html?uni=sattam" class="card-btn">نقل للجامعة</a>
+                </article>
+                <article class="uni-card" data-name="جامعة الأميرة نورة بنت عبدالرحمن">
+                    <h4>جامعة الأميرة نورة بنت عبدالرحمن</h4>
+                    <p>الرياض (منطقة الرياض)</p>
+                    <a href="university-groups.html?uni=nourah" class="card-btn">نقل للجامعة</a>
+                </article>
+                <article class="uni-card" data-name="جامعة الملك سعود">
+                    <h4>جامعة الملك سعود</h4>
+                    <p>الرياض (منطقة الرياض)</p>
+                    <a href="university-groups.html?uni=saud" class="card-btn">نقل للجامعة</a>
+                </article>
+                <article class="uni-card" data-name="جامعة الملك عبدالعزيز">
+                    <h4>جامعة الملك عبدالعزيز</h4>
+                    <p>جدة (منطقة مكة المكرمة)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة الملك عبدالعزيز', false)">نقل للجامعة</button>
+                </article>
+                <article class="uni-card" data-name="جامعة الإمام عبدالرحمن بن الفيصل">
+                    <h4>جامعة الإمام عبدالرحمن بن الفيصل</h4>
+                    <p>الدمام (المنطقة الشرقية)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة الإمام عبدالرحمن بن الفيصل', false)">نقل للجامعة</button>
+                </article>
+                <article class="uni-card" data-name="جامعة تبوك">
+                    <h4>جامعة تبوك</h4>
+                    <p>تبوك (منطقة تبوك)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة تبوك', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="riyadh" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة الأمير سطام بن عبدالعزيز">
+                    <h4>جامعة الأمير سطام بن عبدالعزيز</h4>
+                    <p>الدلم - الخرج (منطقة الرياض)</p>
+                    <a href="university-groups.html?uni=sattam" class="card-btn">نقل للجامعة</a>
+                </article>
+                <article class="uni-card" data-name="جامعة الأميرة نورة بنت عبدالرحمن">
+                    <h4>جامعة الأميرة نورة بنت عبدالرحمن</h4>
+                    <p>الرياض (منطقة الرياض)</p>
+                    <a href="university-groups.html?uni=nourah" class="card-btn">نقل للجامعة</a>
+                </article>
+                <article class="uni-card" data-name="جامعة الملك سعود">
+                    <h4>جامعة الملك سعود</h4>
+                    <p>الرياض (منطقة الرياض)</p>
+                    <a href="university-groups.html?uni=saud" class="card-btn">نقل للجامعة</a>
+                </article>
+            </div>
+
+            <div id="makkah" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة الملك عبدالعزيز">
+                    <h4>جامعة الملك عبدالعزيز</h4>
+                    <p>جدة (منطقة مكة المكرمة)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة الملك عبدالعزيز', false)">نقل للجامعة</button>
+                </article>
+                <article class="uni-card" data-name="جامعة أم القرى">
+                    <h4>جامعة أم القرى</h4>
+                    <p>مكة المكرمة (منطقة مكة المكرمة)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة أم القرى', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="madinah" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة طيبة">
+                    <h4>جامعة طيبة</h4>
+                    <p>المدينة المنورة (منطقة المدينة المنورة)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة طيبة', false)">نقل للجامعة</button>
+                </article>
+                <article class="uni-card" data-name="الجامعة الإسلامية">
+                    <h4>الجامعة الإسلامية</h4>
+                    <p>المدينة المنورة (منطقة المدينة المنورة)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('الجامعة الإسلامية', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="eastern" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة الإمام عبدالرحمن بن الفيصل">
+                    <h4>جامعة الإمام عبدالرحمن بن الفيصل</h4>
+                    <p>الدمام (المنطقة الشرقية)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة الإمام عبدالرحمن بن الفيصل', false)">نقل للجامعة</button>
+                </article>
+                <article class="uni-card" data-name="جامعة الملك فهد للبترول والمعادن">
+                    <h4>جامعة الملك فهد للبترول والمعادن</h4>
+                    <p>الظهران (المنطقة الشرقية)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة الملك فهد للبترول والمعادن', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="qassim" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة القصيم">
+                    <h4>جامعة القصيم</h4>
+                    <p>بريدة (منطقة القصيم)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة القصيم', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="asir" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة الملك خالد">
+                    <h4>جامعة الملك خالد</h4>
+                    <p>أبها (منطقة عسير)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة الملك خالد', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="tabuk" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة تبوك">
+                    <h4>جامعة تبوك</h4>
+                    <p>تبوك (منطقة تبوك)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة تبوك', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="hail" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة حائل">
+                    <h4>جامعة حائل</h4>
+                    <p>حائل (منطقة حائل)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة حائل', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="northern_borders" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة الحدود الشمالية">
+                    <h4>جامعة الحدود الشمالية</h4>
+                    <p>عرعر (منطقة الحدود الشمالية)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة الحدود الشمالية', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="jazan" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة جازان">
+                    <h4>جامعة جازان</h4>
+                    <p>جازان (منطقة جازان)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة جازان', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="najran" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة نجران">
+                    <h4>جامعة نجران</h4>
+                    <p>نجران (منطقة نجران)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة نجران', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="bahah" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة الباحة">
+                    <h4>جامعة الباحة</h4>
+                    <p>الباحة (منطقة الباحة)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة الباحة', false)">نقل للجامعة</button>
+                </article>
+            </div>
+
+            <div id="jouf" class="region-content" style="display:none;">
+                <article class="uni-card" data-name="جامعة الجوف">
+                    <h4>جامعة الجوف</h4>
+                    <p>سكاكا (منطقة الجوف)</p>
+                    <button type="button" class="card-btn" onclick="handleUniversitySelect('جامعة الجوف', false)">نقل للجامعة</button>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        function showRegionData(regionId) {
+            document.querySelectorAll('.region-content').forEach(function(el) { el.style.display = 'none'; });
+            var target = document.getElementById(regionId);
+            if (target) target.style.display = 'grid';
+        }
+        function filterUniversities(text) {
+            var q = text.trim();
+            document.querySelectorAll('.uni-card').forEach(function(card) {
+                var name = card.getAttribute('data-name') || '';
+                card.style.display = (!q || name.indexOf(q) !== -1) ? 'flex' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

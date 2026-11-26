@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>UniLink - تفاصيل القروب</title>
+</head>
+<body>
+    <header>
+        <div><a href="my-groups.html" class="arrow-back" title="رجوع">&gt;</a></div>
+        <nav><ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="add-group-form.html">أضف قروب</a></li>
+                <li><a href="my-groups.html">القروبات</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul></nav>
+        <div><h1>UniLink</h1></div>
+    </header>
+    <main>
+        <section>
+            <h2 id="group-title">تفاصيل المجموعة الدراسية</h2>
+            <p id="group-meta">معلومات المجموعة والكلية والجامعة</p>
+            <p id="group-leader-info"></p>
+            <div class="action-box">
+                <a href="verify-email.html" class="btn-main">تحقق من البريد الجامعي للانضمام</a>
+                <a id="group-files-link" href="group-files.html" class="btn-back">ملفات المجموعة</a>
+            </div>
+        </section>
+    </main>
+    <script>
+        var params = new URLSearchParams(window.location.search);
+        var title = params.get('title');
+        var code = params.get('code');
+        var uni = params.get('uni');
+        var leader = params.get('leader');
+        var time = params.get('time');
+        if (title || code || uni) {
+            document.getElementById('group-title').textContent = (title || 'مجموعة دراسية') + (code ? ' | ' + code : '');
+            document.getElementById('group-meta').textContent = 'الجامعة: ' + (uni || 'جامعة الأمير سطام بن عبدالعزيز');
+            if (leader || time) {
+                document.getElementById('group-leader-info').textContent = 'المشرف: ' + (leader || '—') + (time ? ' | الموعد: ' + time : '');
+            }
+            document.getElementById('group-files-link').href = 'group-files.html?title=' + encodeURIComponent(title || '') + '&code=' + encodeURIComponent(code || '');
+        }
+    </script>
+</body>
+</html>

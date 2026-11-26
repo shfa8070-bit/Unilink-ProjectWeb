@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>UniLink - القروبات</title>
+</head>
+<body>
+    <header>
+        <div><a href="index.html" class="arrow-back" title="رجوع">&gt;</a></div>
+        <nav><ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="add-group-form.html">أضف قروب</a></li>
+                <li><a href="my-groups.html">القروبات</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul></nav>
+        <div><h1>UniLink</h1></div>
+    </header>
+
+    <main>
+        <section>
+            <h2>القروبات</h2>
+            <div class="action-box">
+                <a href="add-group-form.html" class="btn-main">إضافة قروب جديد</a>
+            </div>
+            <div id="user-banner"></div>
+            <div id="groups-list" class="cards-grid"></div>
+            <div id="leader-db-panel"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        var currentUser = getCurrentUser();
+        var banner = document.getElementById('user-banner');
+        var list = document.getElementById('groups-list');
+        var leaderPanel = document.getElementById('leader-db-panel');
+        var isLeader = isLeaderUser(currentUser);
+
+        if (currentUser) {
+            banner.innerHTML = '<div class="welcome-banner"><h3>مرحباً بكِ، ' + escapeHtml(currentUser.name) + '</h3><p>الجامعة: <span class="badge">' + escapeHtml(currentUser.university) + '</span> | التخصص: ' + escapeHtml(currentUser.major) + '</p></div>';
+        } else {
+            banner.innerHTML = '<div class="welcome-banner"><h3>قروبات الجامعات</h3><p>الجامعة: <span class="badge">جميع الجامعات</span> | عرض مشترك للقروبات والمواد</p></div>';
+        }
+
+        function removeGroupAt(idx) {
+            var currentGroups = getGroups();
+            currentGroups.splice(idx, 1);
+            saveGroups(currentGroups);
+            renderMyGroups();
+            if (isLeader) renderLeaderDbPanel();
+        }
+
+        function renderMyGroups() {
+            var groups = getGroups();
+            var showAll = !currentUser || isLeader || !currentUser.university || currentUser.university === 'كل الجامعات';
+            var filtered = groups.filter(function(g) {
+                if (showAll) return true;
+                return !g.university || g.university === currentUser.university;
+            });
+
+            if (!filtered.length) {
+                list.innerHTML = '<div class="empty-data-msg">لايوجد بيانات</div>';
+                return;
+            }
+
+            list.innerHTML = '';
+            filtered.forEach(function(g, idx) {
+                var realIdx = groups.indexOf(g);
+                var art = document.createElement('article');
+                var detailsUrl = 'group-details.html?title=' + encodeURIComponent(g.group_name) +
+                    '&code=' + encodeURIComponent(g.course_code) +
+                    '&uni=' + encodeURIComponent(g.university) +
+                    '&leader=' + encodeURIComponent(g.leader_name || '') +
+                    '&time=' + encodeURIComponent(g.meeting_time || '');
+                var filesUrl = 'group-files.html?title=' + encodeURIComponent(g.group_name) +
+                    '&code=' + encodeURIComponent(g.course_code);
+
+                var courseFiles = getGroupFiles(g.course_code);
+                var filesPreview = '';
+                if (courseFiles.length) {
+                    filesPreview = '<div class="file-item-box"><strong>ملفات المادة:</strong><br>' +
+                        courseFiles.map(function(f, fIdx) {
+                            var fn = f.fileName || (f.title + '.txt');
+                            return '<div style="margin-top:4px;">• ' + escapeHtml(f.title) +
+                                ' <button type="button" class="btn-download-link" onclick="downloadGeneratedFile(' +
+                                '\'' + escapeHtml(fn).replace(/'/g, "\\'") + '\',' +
+                                '\'' + escapeHtml(f.title).replace(/'/g, "\\'") + '\',' +
+                                '\'' + escapeHtml(f.note || '').replace(/'/g, "\\'") + '\',' +
+                                '\'' + escapeHtml(g.course_code + ' - ' + g.university).replace(/'/g, "\\'") + '\')">تحميل</button></div>';
+                        }).join('') + '</div>';
+                }
+
+                art.innerHTML = '<h3>' + escapeHtml(g.group_name) + ' | ' + escapeHtml(g.course_code) + '</h3>' +
+                    '<p>الجامعة: <span class="badge">' + escapeHtml(g.university) + '</span></p>' +
+                    '<p>المشرف: ' + escapeHtml(g.leader_name) + ' — الموعد: ' + escapeHtml(g.meeting_time) + '</p>' +
+                    filesPreview +
+                    '<div class="form-actions">' +
+                        '<a href="' + detailsUrl + '" class="card-btn">تفاصيل القروب</a>' +
+                        '<a href="' + filesUrl + '" class="btn-back" style="padding:6px 12px;font-size:12px;margin-top:10px;">ملفات المادة</a>' +
+                        '<button type="button" class="btn-delete-red" id="del-group-' + idx + '">حذف</button>' +
+                    '</div>';
+                list.appendChild(art);
+                document.getElementById('del-group-' + idx).onclick = function() {
+                    removeGroupAt(realIdx >= 0 ? realIdx : idx);
+                };
+            });
+        }
+
+        function renderLeaderDbPanel() {
+            if (!isLeader) {
+                leaderPanel.innerHTML = '';
+                return;
+            }
+            var groups = getGroups();
+            var contents = getContents();
+
+            var groupRows = groups.map(function(g, i) {
+                return '<tr>' +
+                    '<td>' + escapeHtml(g.university) + '</td>' +
+                    '<td>' + escapeHtml(g.group_name) + '</td>' +
+                    '<td>' + escapeHtml(g.course_code) + '</td>' +
+                    '<td>' + escapeHtml(g.leader_name) + '</td>' +
+                    '<td>' + escapeHtml(g.meeting_time) + '</td>' +
+                    '<td>' +
+                        '<button type="button" class="btn-back" style="padding:4px 10px;font-size:12px;" onclick="editDbGroup(' + i + ')">تعديل</button> ' +
+                        '<button type="button" class="btn-delete-red" style="margin-top:0;padding:4px 10px;" onclick="deleteDbGroup(' + i + ')">حذف</button>' +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+
+            var contentRows = contents.map(function(c, i) {
+                return '<tr>' +
+                    '<td>' + escapeHtml(c.university) + '</td>' +
+                    '<td>' + escapeHtml(c.course_code) + '</td>' +
+                    '<td>' + escapeHtml(c.title) + '</td>' +
+                    '<td>' + escapeHtml(c.content_type) + '</td>' +
+                    '<td>' + escapeHtml(c.author || '') + '</td>' +
+                    '<td>' +
+                        '<button type="button" class="btn-back" style="padding:4px 10px;font-size:12px;" onclick="editDbContent(' + i + ')">تعديل</button> ' +
+                        '<button type="button" class="btn-delete-red" style="margin-top:0;padding:4px 10px;" onclick="deleteDbContent(' + i + ')">حذف</button>' +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+
+            leaderPanel.innerHTML =
+                '<div class="admin-panel-box">' +
+                    '<h3>لوحة إدارة بيانات المنصة (للمشرف - جميع الجامعات)</h3>' +
+                    '<p>إضافة وتعديل وحذف المجموعات والمصادر المحفوظة في قاعدة البيانات المحلية</p>' +
+                    '<form onsubmit="adminAddGroup(event)" style="margin-top:12px;padding:18px;">' +
+                        '<h4>إضافة قروب جديد مباشرة</h4>' +
+                        '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:10px;">' +
+                            '<select id="adm-g-uni"><option value="جامعة الأمير سطام بن عبدالعزيز">جامعة الأمير سطام بن عبدالعزيز</option><option value="جامعة الملك سعود">جامعة الملك سعود</option><option value="جامعة الأميرة نورة بنت عبدالرحمن">جامعة الأميرة نورة بنت عبدالرحمن</option></select>' +
+                            '<input type="text" id="adm-g-name" placeholder="اسم المجموعة" required>' +
+                            '<input type="text" id="adm-g-code" placeholder="رمز المقرر" required>' +
+                            '<input type="text" id="adm-g-leader" placeholder="اسم المشرف" required>' +
+                            '<input type="text" id="adm-g-time" placeholder="موعد اللقاء" required>' +
+                        '</div>' +
+                        '<button type="submit" class="btn-submit" style="margin-top:10px;">إضافة قروب</button>' +
+                    '</form>' +
+                    '<h4 style="margin-top:18px;">جدول المجموعات في قاعدة البيانات</h4>' +
+                    '<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>الجامعة</th><th>المجموعة</th><th>المقرر</th><th>المشرف</th><th>الموعد</th><th>إجراءات</th></tr></thead><tbody>' + (groupRows || '<tr><td colspan="6">لايوجد بيانات</td></tr>') + '</tbody></table></div>' +
+                    '<form onsubmit="adminAddContent(event)" style="margin-top:20px;padding:18px;">' +
+                        '<h4>إضافة مصدر جديد مباشرة</h4>' +
+                        '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:10px;">' +
+                            '<select id="adm-c-uni"><option value="جامعة الأمير سطام بن عبدالعزيز">جامعة الأمير سطام بن عبدالعزيز</option><option value="جامعة الملك سعود">جامعة الملك سعود</option><option value="جامعة الأميرة نورة بنت عبدالرحمن">جامعة الأميرة نورة بنت عبدالرحمن</option></select>' +
+                            '<input type="text" id="adm-c-code" placeholder="رمز المقرر" required>' +
+                            '<input type="text" id="adm-c-title" placeholder="عنوان المصدر" required>' +
+                            '<input type="text" id="adm-c-summary" placeholder="الملخص" required>' +
+                            '<input type="text" id="adm-c-file" placeholder="اسم الملف (مثال: Notes.pdf)">' +
+                        '</div>' +
+                        '<button type="submit" class="btn-submit" style="margin-top:10px;">إضافة مصدر</button>' +
+                    '</form>' +
+                    '<h4 style="margin-top:18px;">جدول المصادر في قاعدة البيانات</h4>' +
+                    '<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>الجامعة</th><th>المقرر</th><th>العنوان</th><th>النوع</th><th>الناشر</th><th>إجراءات</th></tr></thead><tbody>' + (contentRows || '<tr><td colspan="6">لايوجد بيانات</td></tr>') + '</tbody></table></div>' +
+                    renderStudentsTableSection() +
+                '</div>';
+        }
+
+        function renderStudentsTableSection() {
+            var students = getStudentsStorage();
+            var studentRows = students.map(function(s, i) {
+                return '<tr>' +
+                    '<td>' + escapeHtml(s.name) + '</td>' +
+                    '<td>' + escapeHtml(s.university) + '</td>' +
+                    '<td>' + escapeHtml(s.major) + '</td>' +
+                    '<td>' + escapeHtml(s.email) + '</td>' +
+                    '<td>' + escapeHtml(s.role || 'طالب') + '</td>' +
+                    '<td>' +
+                        '<button type="button" class="btn-back" style="padding:4px 10px;font-size:12px;" onclick="editDbStudent(' + i + ')">تعديل</button> ' +
+                        '<button type="button" class="btn-delete-red" style="margin-top:0;padding:4px 10px;" onclick="deleteDbStudent(' + i + ')">حذف</button>' +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+
+            return '<form onsubmit="adminAddStudent(event)" style="margin-top:20px;padding:18px;">' +
+                '<h4>إضافة طالب جديد مباشرة</h4>' +
+                '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:10px;">' +
+                    '<input type="text" id="adm-s-name" placeholder="اسم الطالب" required>' +
+                    '<select id="adm-s-uni"><option value="جامعة الأمير سطام بن عبدالعزيز">جامعة الأمير سطام بن عبدالعزيز</option><option value="جامعة الملك سعود">جامعة الملك سعود</option><option value="جامعة الأميرة نورة بنت عبدالرحمن">جامعة الأميرة نورة بنت عبدالرحمن</option><option value="كل الجامعات">كل الجامعات</option></select>' +
+                    '<input type="text" id="adm-s-major" placeholder="التخصص" required>' +
+                    '<input type="email" id="adm-s-email" placeholder="البريد الإلكتروني" required>' +
+                    '<select id="adm-s-role"><option value="طالب">طالب</option><option value="ليدر">ليدر</option></select>' +
+                '</div>' +
+                '<button type="submit" class="btn-submit" style="margin-top:10px;">إضافة طالب</button>' +
+            '</form>' +
+            '<h4 style="margin-top:18px;">جدول الطلاب في قاعدة البيانات</h4>' +
+            '<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>الاسم</th><th>الجامعة</th><th>التخصص</th><th>البريد الإلكتروني</th><th>الدور</th><th>إجراءات</th></tr></thead><tbody>' + (studentRows || '<tr><td colspan="6">لايوجد بيانات</td></tr>') + '</tbody></table></div>';
+        }
+
+        function adminAddStudent(e) {
+            e.preventDefault();
+            var listS = getStudentsStorage();
+            listS.unshift({
+                name: document.getElementById('adm-s-name').value.trim(),
+                university: document.getElementById('adm-s-uni').value,
+                major: document.getElementById('adm-s-major').value.trim(),
+                email: document.getElementById('adm-s-email').value.trim(),
+                role: document.getElementById('adm-s-role').value
+            });
+            saveStudentsStorage(listS);
+            renderLeaderDbPanel();
+        }
+
+        function editDbStudent(idx) {
+            var listS = getStudentsStorage();
+            var item = listS[idx];
+            if (!item) return;
+            var newName = prompt('تعديل اسم الطالب:', item.name);
+            if (newName === null) return;
+            var newUni = prompt('تعديل الجامعة:', item.university);
+            if (newUni === null) return;
+            var newMajor = prompt('تعديل التخصص:', item.major);
+            if (newMajor === null) return;
+            var newEmail = prompt('تعديل البريد الإلكتروني:', item.email);
+            if (newEmail === null) return;
+            item.name = newName.trim() || item.name;
+            item.university = newUni.trim() || item.university;
+            item.major = newMajor.trim() || item.major;
+            item.email = newEmail.trim() || item.email;
+            saveStudentsStorage(listS);
+            renderLeaderDbPanel();
+        }
+
+        function deleteDbStudent(idx) {
+            var listS = getStudentsStorage();
+            listS.splice(idx, 1);
+            saveStudentsStorage(listS);
+            renderLeaderDbPanel();
+        }
+
+        function adminAddGroup(e) {
+            e.preventDefault();
+            var listG = getGroups();
+            listG.unshift({
+                university: document.getElementById('adm-g-uni').value,
+                college: 'كلية الهندسة وعلوم الحاسب',
+                level: '7',
+                group_name: document.getElementById('adm-g-name').value.trim(),
+                course_code: document.getElementById('adm-g-code').value.trim(),
+                leader_name: document.getElementById('adm-g-leader').value.trim(),
+                meeting_time: document.getElementById('adm-g-time').value.trim(),
+                members: randomMemberCount(30, 200),
+                author: 'مشرف الجامعات'
+            });
+            saveGroups(listG);
+            renderMyGroups();
+            renderLeaderDbPanel();
+        }
+
+        function editDbGroup(idx) {
+            var listG = getGroups();
+            var item = listG[idx];
+            if (!item) return;
+            var newName = prompt('تعديل اسم المجموعة:', item.group_name);
+            if (newName === null) return;
+            var newCode = prompt('تعديل رمز المقرر:', item.course_code);
+            if (newCode === null) return;
+            var newLeader = prompt('تعديل اسم المشرف:', item.leader_name);
+            if (newLeader === null) return;
+            var newTime = prompt('تعديل موعد اللقاء:', item.meeting_time);
+            if (newTime === null) return;
+            item.group_name = newName.trim() || item.group_name;
+            item.course_code = newCode.trim() || item.course_code;
+            item.leader_name = newLeader.trim() || item.leader_name;
+            item.meeting_time = newTime.trim() || item.meeting_time;
+            saveGroups(listG);
+            renderMyGroups();
+            renderLeaderDbPanel();
+        }
+
+        function deleteDbGroup(idx) {
+            var listG = getGroups();
+            listG.splice(idx, 1);
+            saveGroups(listG);
+            renderMyGroups();
+            renderLeaderDbPanel();
+        }
+
+        function adminAddContent(e) {
+            e.preventDefault();
+            var listC = getContents();
+            var fn = document.getElementById('adm-c-file').value.trim();
+            listC.unshift({
+                university: document.getElementById('adm-c-uni').value,
+                course_code: document.getElementById('adm-c-code').value.trim(),
+                title: document.getElementById('adm-c-title').value.trim(),
+                content_type: fn ? 'ملف' : 'نص',
+                summary: document.getElementById('adm-c-summary').value.trim(),
+                text_body: document.getElementById('adm-c-summary').value.trim(),
+                file_name: fn,
+                author: 'مشرف الجامعات'
+            });
+            saveContents(listC);
+            renderLeaderDbPanel();
+        }
+
+        function editDbContent(idx) {
+            var listC = getContents();
+            var item = listC[idx];
+            if (!item) return;
+            var newTitle = prompt('تعديل عنوان المصدر:', item.title);
+            if (newTitle === null) return;
+            var newSummary = prompt('تعديل الملخص:', item.summary);
+            if (newSummary === null) return;
+            item.title = newTitle.trim() || item.title;
+            item.summary = newSummary.trim() || item.summary;
+            saveContents(listC);
+            renderLeaderDbPanel();
+        }
+
+        function deleteDbContent(idx) {
+            var listC = getContents();
+            listC.splice(idx, 1);
+            saveContents(listC);
+            renderLeaderDbPanel();
+        }
+
+        renderMyGroups();
+        renderLeaderDbPanel();
+    </script>
+</body>
+</html>

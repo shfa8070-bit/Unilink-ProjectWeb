@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>UniLink - نموذج إضافة قروب</title>
+</head>
+<body>
+    <header>
+        <div><a href="index.html" class="arrow-back" title="رجوع">&gt;</a></div>
+        <nav><ul>
+                <li><a href="login.html">تسجيل الدخول</a></li>
+                <li><a href="universities.html">الجامعات</a></li>
+                <li><a href="add-group-form.html">أضف قروب</a></li>
+                <li><a href="my-groups.html">القروبات</a></li>
+                <li><a href="community.html">المجتمع</a></li>
+            </ul></nav>
+        <div><h1>UniLink</h1></div>
+    </header>
+
+    <main>
+        <section class="auth-section">
+            <h2>بيانات المجموعة الدراسية</h2>
+            <form onsubmit="saveNewGroup(event)">
+                <div>
+                    <label for="university">الجامعة</label>
+                    <select id="university" required>
+                        <option value="جامعة الأمير سطام بن عبدالعزيز">جامعة الأمير سطام بن عبدالعزيز</option>
+                        <option value="جامعة الملك سعود">جامعة الملك سعود</option>
+                        <option value="جامعة الأميرة نورة بنت عبدالرحمن">جامعة الأميرة نورة بنت عبدالرحمن</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="college">الكلية</label>
+                    <select id="college" required>
+                        <option value="كلية الهندسة وعلوم الحاسب">كلية الهندسة وعلوم الحاسب</option>
+                        <option value="كلية علوم الحاسب والمعلومات">كلية علوم الحاسب والمعلومات</option>
+                        <option value="كلية العلوم">كلية العلوم</option>
+                        <option value="كلية إدارة الأعمال">كلية إدارة الأعمال</option>
+                        <option value="كلية الطب">كلية الطب</option>
+                        <option value="كلية الصيدلة">كلية الصيدلة</option>
+                        <option value="كلية التربية">كلية التربية</option>
+                        <option value="كلية التصاميم والفنون">كلية التصاميم والفنون</option>
+                        <option value="كلية الآداب والعلوم الإنسانية">كلية الآداب والعلوم الإنسانية</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="level">المستوى الدراسي</label>
+                    <select id="level">
+                        <option value="1">المستوى 1</option>
+                        <option value="2">المستوى 2</option>
+                        <option value="3">المستوى 3</option>
+                        <option value="4">المستوى 4</option>
+                        <option value="5">المستوى 5</option>
+                        <option value="6">المستوى 6</option>
+                        <option value="7">المستوى 7</option>
+                        <option value="8">المستوى 8</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="group_name">اسم المجموعة</label>
+                    <input type="text" id="group_name" placeholder="مثال: أساسيات الكيمياء" required>
+                </div>
+                <div>
+                    <label for="course_code">رمز المقرر</label>
+                    <input type="text" id="course_code" placeholder="مثال: CHEM 101" required>
+                </div>
+                <div>
+                    <label for="leader_name">اسم المشرف</label>
+                    <input type="text" id="leader_name" placeholder="اسم المشرف أو المنسق" required>
+                </div>
+                <div>
+                    <label for="meeting_time">موعد اللقاء</label>
+                    <input type="text" id="meeting_time" placeholder="مثال: الأحد 6:00 مساءً" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">حفظ المجموعة</button>
+                    <a href="my-groups.html" class="btn-back">القروبات</a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        var qp = new URLSearchParams(window.location.search);
+        var u = getCurrentUser();
+        var uniSelect = document.getElementById('university');
+        if (qp.get('uni')) uniSelect.value = qp.get('uni');
+        else if (u && u.university && u.university !== 'كل الجامعات') uniSelect.value = u.university;
+
+        if (qp.get('college')) {
+            var colSel = document.getElementById('college');
+            var targetCol = qp.get('college');
+            var hasOpt = Array.from(colSel.options).some(function(o) { return o.value === targetCol; });
+            if (!hasOpt) {
+                var opt = document.createElement('option');
+                opt.value = targetCol;
+                opt.textContent = targetCol;
+                colSel.appendChild(opt);
+            }
+            colSel.value = targetCol;
+        }
+
+        function saveNewGroup(e) {
+            e.preventDefault();
+            var groups = getGroups();
+            var curr = getCurrentUser();
+            groups.unshift({
+                university: document.getElementById('university').value.trim(),
+                college: document.getElementById('college').value,
+                level: document.getElementById('level').value,
+                group_name: document.getElementById('group_name').value.trim(),
+                course_code: document.getElementById('course_code').value.trim(),
+                leader_name: document.getElementById('leader_name').value.trim(),
+                meeting_time: document.getElementById('meeting_time').value.trim(),
+                members: randomMemberCount(20, 210),
+                author: (curr && curr.name) ? curr.name : 'شهد'
+            });
+            saveGroups(groups);
+            window.location.href = 'my-groups.html';
+        }
+    </script>
+</body>
+</html>
